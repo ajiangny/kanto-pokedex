@@ -21,6 +21,7 @@ body {
       linear-gradient(90deg, #ccc 1px, transparent 1px);
     background-size: 50px 50px;
     overflow: hidden;
+    cursor: url('images/cursor.png'), auto;
 }
 /* ===================
    Header
@@ -113,6 +114,7 @@ h1 {
 
 .pokemon-name {
     width: 18rem;
+    text-align: center;
 }
 
 .pokemon-img {
@@ -139,8 +141,8 @@ h1 {
 
 .pokemon-img img {
     width: auto;
-    height: 50%; /* 🧹 full height of the container */
-    object-fit: contain; /* 🚀 Fit inside without stretching */
+    height: 50%; 
+    object-fit: contain; 
     image-rendering: pixelated;
     position: relative;
     z-index: 1;
@@ -330,8 +332,8 @@ h1 {
    Pokémon List Section
    =================== */
    .pokemon-list {
-    width: 300px; /* Add fixed width */
-    height: 480px; /* 🔥 Lowered height so 10 Pokémon fit exactly */
+    width: 75%; 
+    height: 480px; 
     background: white;
     border-radius: 1rem;
     box-shadow: 0 0 0 4px red, 2px 2px 0 6px black;
@@ -496,3 +498,33 @@ h1 {
 .type li.fairy {
     background: linear-gradient(to bottom, #EE99AC 0%, #EE99AC 40%, #D08090 40%, #D08090 65%, #B06878 65%, #B06878 100%);
 }
+
+@media (max-width: 768px) {
+    .pokedex-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .pokemon-basic-info,
+    .pokemon-details,
+    .pokemon-list-wrapper {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .pokemon-img {
+      width: 250px;
+      height: 250px;
+    }
+  
+    .pokemon-header {
+      flex-direction: column;
+    }
+  
+    body {
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+  }
+
+  

@@ -6,28 +6,49 @@
     <title>Kanto Pokédex</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
+    
+    <!-- ======================
+         Header Section
+    ======================= -->
     <header>
         <h1>Kanto Pokédex</h1>
     </header>
 
+    <!-- ======================
+         Main Pokédex Container
+    ======================= -->
     <div class="pokedex-container">
-        <!-- Left: Image + Name + Number -->
+
+        <!-- ======================
+             Left Column: Basic Info (Name, Number, Image)
+        ======================= -->
         <div class="pokemon-basic-info">
             <div class="pokemon-header">
-                <div class="pokemon-name"><h2>Bulbasaur</h2></div>
-                <div class="pokemon-id"><h2>#001</h2></div>
+                <div class="pokemon-name">
+                    <h2>Bulbasaur</h2>
+                </div>
+                <div class="pokemon-id">
+                    <h2>#001</h2>
+                </div>
             </div>
+
             <div class="pokemon-img">
-                <img src="images/Missing.webp" alt="missingimg">
+                <img src="images/Missing.webp" alt="Missing Pokémon Sprite">
             </div>
         </div>
-    
-        <!-- Center: Details, Info, Stats -->
+
+        <!-- ======================
+             Center Column: Details + Stats
+        ======================= -->
         <div class="pokemon-details">
             <div class="pokemon-info">
+                
+                <!-- Pokémon Species -->
                 <h3>Seed Pokémon</h3>
-    
+
+                <!-- Pokémon Types -->
                 <h4>Type</h4>
                 <div class="type-wrapper">
                     <ul class="type">
@@ -35,11 +56,15 @@
                         <li class="poison">Poison</li>
                     </ul>
                 </div>
-    
+
+                <!-- Pokémon Description -->
                 <h4>Info</h4>
                 <p>???</p>
-    
+
+                <!-- Details and Stats Section -->
                 <div class="info-sections">
+
+                    <!-- Pokémon Details -->
                     <h4>Details</h4>
                     <ul class="details">
                         <li>Height: ?</li>
@@ -48,7 +73,8 @@
                         <li>Abilities: ?</li>
                         <li>Gender: ?</li>
                     </ul>
-    
+
+                    <!-- Pokémon Stats -->
                     <h4>Stats</h4>
                     <ul class="stats">
                         <li>
@@ -94,31 +120,41 @@
                             <span class="stat-label">SPD</span>
                         </li>
                     </ul>
-                </div>
-            </div>
-        </div>
-    
-        <!-- Right: Navigator Pokémon List -->
+
+                </div> <!-- end info-sections -->
+            </div> <!-- end pokemon-info -->
+        </div> <!-- end pokemon-details -->
+
+        <!-- ======================
+             Right Column: Pokémon Navigator List
+        ======================= -->
         <div class="pokemon-list-wrapper">
             <div class="pokemon-list">
                 <div class="hover-selector"></div>
                 <ul>
-                    <!-- Your Pokémon list items -->
+                    <!-- Pokémon list items dynamically loaded here -->
                 </ul>
             </div>
         </div>
-    </div>
+
+    </div> <!-- end pokedex-container -->
+
+    <!-- ======================
+         Scripts
+    ======================= -->
     <script src="pokedex.js"></script>
+
+    <!-- ======================
+         SVG Filter (Pixelate Effect)
+    ======================= -->
     <svg>
         <filter id="pixelate" x="0" y="0">
-          <feFlood x="5" y="5" height="1" width="1"/>
-          <feComposite width="10" height="10"/>
-          <feTile result="a"/>
-          <feComposite in="SourceGraphic" in2="a" operator="in"/>
-          <feMorphology operator="dilate" radius="5"/>
+            <feFlood x="5" y="5" height="1" width="1"/>
+            <feComposite width="10" height="10"/>
+            <feTile result="a"/>
+            <feComposite in="SourceGraphic" in2="a" operator="in"/>
+            <feMorphology operator="dilate" radius="5"/>
         </filter>
-      </svg>
+    </svg>
 </body>
-
-  
 </html>

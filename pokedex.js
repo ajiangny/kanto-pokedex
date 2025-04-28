@@ -9,32 +9,28 @@ function updatePokemonDetails(li) {
 
     const image = document.querySelector('.pokemon-img img');
 
-    // Reset any ongoing animation
+    // Reset animation
     image.style.transition = 'none';
     image.style.filter = 'none';
-    
+
     image.style.transition = 'filter 0.2s ease, opacity 0.2s ease';
     image.style.filter = 'url(#pixelate)';
 
     setTimeout(() => {
         image.src = data.sprite;
 
-        // When new image loads, apply glitch again briefly
         image.onload = () => {
             image.style.transition = 'filter 0.5s ease, opacity 0.5s ease';
             image.style.filter = 'url(#pixelate)';
-
-            // cleanly fade to normal
             setTimeout(() => {
                 image.style.filter = 'none';
-            }, 300); // timing here controls how long glitch lingers
+            }, 300);
         };
     }, 150);
 
-    // Name and ID
+    // Update Name and ID
     document.querySelector('.pokemon-name h2').textContent = capitalize(data.name);
     document.querySelector('.pokemon-id h2').textContent = `#${data.id.toString().padStart(3, '0')}`;
-
 
     // Species / Category
     document.querySelector('.pokemon-info h3').textContent = data.speciesName || "Pokémon";
@@ -52,64 +48,82 @@ function updatePokemonDetails(li) {
     // Info
     document.querySelector('.pokemon-info p').textContent = data.description || "No description available.";
 
-    // Gender
-    const gender = getGenderDisplay(data.genderRate);
-
-    // Details
+    // ==== Details Section ====
     const detailList = document.querySelector('.details');
-    detailList.innerHTML = `
+    detailList.innerHTML = '';
+
+    // Height, Weight, Category, Abilities
+    detailList.innerHTML += `
         <li>Height: ${(data.height / 10).toFixed(1)}m</li>
         <li>Weight: ${(data.weight / 10).toFixed(1)}kg</li>
         <li>Category: ${data.speciesName || "Unknown"}</li>
         <li>Abilities: ${data.abilities.join(', ')}</li>
-        <li>Gender: 
-        <span class="gender-buttons">
-            <span class="gender-icon" data-gender="male">♂</span> 
-            <span class="gender-icon" data-gender="female">♀</span>
-        </span>
-        </li>
     `;
 
-    // Stats
+    // Gender
+    const genderLi = document.createElement('li');
+    genderLi.textContent = 'Gender: ';
+
+    const genderWrapper = document.createElement('span');
+    genderWrapper.classList.add('gender-buttons');
+
+    if (data.genderRate === -1) {
+        genderLi.innerHTML += 'Genderless';
+    } else {
+        if (data.genderRate !== 8) {
+            // Allow Male
+            const maleIcon = document.createElement('span');
+            maleIcon.classList.add('gender-icon');
+            maleIcon.dataset.gender = 'male';
+            maleIcon.textContent = '♂';
+            genderWrapper.appendChild(maleIcon);
+        }
+        if (data.genderRate !== 0) {
+            // Allow Female
+            const femaleIcon = document.createElement('span');
+            femaleIcon.classList.add('gender-icon');
+            femaleIcon.dataset.gender = 'female';
+            femaleIcon.textContent = '♀';
+            genderWrapper.appendChild(femaleIcon);
+        }
+        genderLi.appendChild(genderWrapper);
+    }
+    detailList.appendChild(genderLi);
+
+    // ==== Stats Section ====
     const statsList = document.querySelector('.stats');
     statsList.innerHTML = '';
     const statLabels = ["HP", "ATK", "DEF", "SATK", "SDEF", "SPD"];
 
-data.stats.forEach((statValue, index) => {
-    const li = document.createElement('li');
+    data.stats.forEach((statValue, index) => {
+        const li = document.createElement('li');
 
-    // Create the number + bar wrapper
-    const wrapper = document.createElement('div');
-    wrapper.classList.add('stat-bar-wrapper');
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('stat-bar-wrapper');
 
-    // Number
-    const number = document.createElement('span');
-    number.classList.add('stat-number');
-    number.textContent = statValue;
+        const number = document.createElement('span');
+        number.classList.add('stat-number');
+        number.textContent = statValue;
 
-    // Progress bar
-    const progress = document.createElement('progress');
-    progress.value = statValue;
-    progress.max = 255; 
+        const progress = document.createElement('progress');
+        progress.value = statValue;
+        progress.max = 255;
 
-    // Add number and progress into wrapper
-    wrapper.appendChild(number);
-    wrapper.appendChild(progress);
+        wrapper.appendChild(number);
+        wrapper.appendChild(progress);
 
-    // Create the label
-    const label = document.createElement('span');
-    label.classList.add('stat-label');
-    label.textContent = statLabels[index];
+        const label = document.createElement('span');
+        label.classList.add('stat-label');
+        label.textContent = statLabels[index];
 
-    // Add wrapper + label into li
-    li.appendChild(wrapper);
-    li.appendChild(label);
+        li.appendChild(wrapper);
+        li.appendChild(label);
 
-    // Finally add to the stats list
-    statsList.appendChild(li);
+        statsList.appendChild(li);
+    });
 
+    // Attach the gender click functionality
     attachGenderButtons(data);
-});
 }
 
 // Move Hover Selector
@@ -146,7 +160,7 @@ function moveHoverSelector(li, smooth = false) {
     }
 }
 
-// Actually update Hover Selector position
+// update Hover Selector position
 function updateHoverSelectorPosition(li, ul, container) {
     const liRect = li.getBoundingClientRect();
     const ulRect = ul.getBoundingClientRect();
@@ -228,7 +242,7 @@ function addPokemonToList(pokemon) {
 
     // Click to select
     li.addEventListener('click', () => {
-        // 🔥 FIXED: Always get fresh pokemonItems
+        // FIXED: Always get fresh pokemonItems
         const items = document.querySelectorAll('.pokemon-list ul li');
         selectedPokemon = li;
         selectedIndex = Array.from(items).indexOf(li);
@@ -252,6 +266,8 @@ async function loadPokemon() {
         moveHoverSelector(selectedPokemon, false);
         updatePokemonDetails(selectedPokemon);
     }
+    
+    
 }
 
 // Variables
@@ -282,48 +298,66 @@ document.querySelector('.pokemon-list').addEventListener('wheel', (event) => {
 
 function attachGenderButtons(pokemonData) {
     const genderIcons = document.querySelectorAll('.gender-icon');
+    const img = document.querySelector('.pokemon-img img');
 
-    // Decide if gender switch is available
+    // Check if female sprite actually exists
     const hasFemaleForm = !!pokemonData.spriteFemale;
 
     genderIcons.forEach(icon => {
         const gender = icon.dataset.gender;
 
-        // Reset any old states
+        // Clean any old states
         icon.classList.remove('gender-available', 'disabled', 'active');
+        icon.style.pointerEvents = 'auto';
 
         if (!hasFemaleForm) {
-            // No gender difference: disable both icons
-            icon.classList.add('disabled');
-            return;
+            // No special female form → Disable female button
+            if (gender === 'female') {
+                icon.classList.add('disabled');
+                icon.style.pointerEvents = 'none'; // Prevent clicking
+            }
+            if (gender === 'male') {
+                icon.classList.add('disabled');
+                icon.style.pointerEvents = 'none'; // Also stop clicking male (optional but clean)
+            }
+            return; // Done early
         }
 
-        // If female sprite exists:
+        // If there IS a special female form
         if (gender === 'female') {
-            icon.classList.add('gender-available'); // glowing only ♀
+            icon.classList.add('gender-available'); // pulse effect
         }
 
         icon.addEventListener('click', () => {
-            // Ignore if disabled
-            if (icon.classList.contains('disabled')) {
-                return;
-            }
+            // Ignore click if disabled
+            if (icon.classList.contains('disabled')) return;
 
+            // Clicking male
             if (gender === 'male') {
-                document.querySelector('.pokemon-img img').src = pokemonData.sprite;
+                img.src = pokemonData.sprite;
 
-                // If clicking male, don't apply "active" highlight at all
-                genderIcons.forEach(g => g.classList.remove('active'));
-            } else if (gender === 'female') {
-                document.querySelector('.pokemon-img img').src = pokemonData.spriteFemale || pokemonData.sprite;
+                // Clean up
+                genderIcons.forEach(g => {
+                    g.classList.remove('active');
+                    g.classList.remove('gender-available');
+                });
+            }
+            // Clicking female
+            else if (gender === 'female') {
+                img.src = pokemonData.spriteFemale || pokemonData.sprite;
 
-                // Only ♀ gets active highlight
-                genderIcons.forEach(g => g.classList.remove('active'));
+                genderIcons.forEach(g => {
+                    g.classList.remove('active');
+                    g.classList.remove('gender-available');
+                });
                 icon.classList.add('active');
             }
         });
     });
+    
 }
 
 // Start everything
 loadPokemon();
+
+
