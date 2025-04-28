@@ -9,27 +9,25 @@ function updatePokemonDetails(li) {
 
     const image = document.querySelector('.pokemon-img img');
 
-    // 🧹 Reset any ongoing animation
+    // Reset any ongoing animation
     image.style.transition = 'none';
     image.style.filter = 'none';
-
-    // Step 1: Glitch the current image
+    
     image.style.transition = 'filter 0.2s ease, opacity 0.2s ease';
     image.style.filter = 'url(#pixelate)';
 
-    // Step 2: After short delay, swap the sprite
     setTimeout(() => {
         image.src = data.sprite;
 
-        // Step 3: When new image loads, apply glitch again briefly
+        // When new image loads, apply glitch again briefly
         image.onload = () => {
             image.style.transition = 'filter 0.5s ease, opacity 0.5s ease';
             image.style.filter = 'url(#pixelate)';
 
-            // Step 4: Then cleanly fade to normal
+            // cleanly fade to normal
             setTimeout(() => {
                 image.style.filter = 'none';
-            }, 300); // 🔥 timing here controls how long glitch lingers
+            }, 300); // timing here controls how long glitch lingers
         };
     }, 150);
 
@@ -92,7 +90,7 @@ data.stats.forEach((statValue, index) => {
     // Progress bar
     const progress = document.createElement('progress');
     progress.value = statValue;
-    progress.max = 318; // or 255 if you want real stat scaling
+    progress.max = 255; 
 
     // Add number and progress into wrapper
     wrapper.appendChild(number);
