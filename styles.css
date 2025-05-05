@@ -84,8 +84,33 @@ h1 {
 /* Right Section (List) */
 .pokemon-list-wrapper {
     flex: 1;
-    display: flex;
     justify-content: center;
+}
+
+
+.search-wrapper {
+    display: flex;
+    width: 75%;
+    position: relative;
+    margin: auto;
+    gap: 1rem;
+}
+
+.type-filter {
+    width: 75%;
+    margin: 0 auto 1rem auto;
+    flex: 2;
+}
+
+.type-filter select {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: 2px solid black;
+    border-radius: 1rem;
+    box-shadow: 0 0 0 4px red, 2px 2px 0 6px black;
+    background-color: white;
+    font-family: 'PokemonPixel', sans-serif;
 }
 
 /* ===================
@@ -220,6 +245,30 @@ h1 {
 .gender-icon.disabled {
     pointer-events: none;
 }
+
+
+
+.search-bar {
+    width: 75%;
+    margin: 0 auto 1rem auto;
+    flex: 3;
+}
+
+/* ===================
+   Search Bar
+   =================== */
+
+.search-bar input {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: 2px solid black;
+    border-radius: 1rem;
+    box-shadow: 0 0 0 4px red, 2px 2px 0 6px black;
+    background-color: white;
+    font-family: 'PokemonPixel', sans-serif;
+}
+
 
 /* ===================
    Pokémon Details Info

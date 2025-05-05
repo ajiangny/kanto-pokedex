@@ -52,7 +52,7 @@ function updatePokemonDetails(li) {
     const detailList = document.querySelector('.details');
     detailList.innerHTML = '';
 
-    // Height, Weight, Category, Abilities
+    // Height, Weight, Category, Abilities 
     detailList.innerHTML += `
         <li>Height: ${(data.height / 10).toFixed(1)}m</li>
         <li>Weight: ${(data.weight / 10).toFixed(1)}kg</li>
@@ -269,6 +269,40 @@ async function loadPokemon() {
     
     
 }
+
+const searchInput = document.getElementById('searchInput');
+const typeSelect = document.getElementById('typeSelect');
+
+function applyFilters() {
+    const query = searchInput.value.toLowerCase();
+    const selectedType = typeSelect.value;
+    const items = document.querySelectorAll('.pokemon-list ul li');
+
+    items.forEach(li => {
+        const data = JSON.parse(li.dataset.pokemonData);
+        const name = data.name.toLowerCase();
+        const types = data.types.map(t => t.toLowerCase());
+
+        const nameMatches = name.includes(query);
+        const typeMatches = selectedType === '' || types.includes(selectedType.toLowerCase());
+
+        li.style.display = nameMatches && typeMatches ? 'block' : 'none';
+    });
+
+    // Update scrollable list
+    pokemonItems = Array.from(document.querySelectorAll('.pokemon-list ul li'))
+        .filter(li => li.style.display !== 'none');
+
+    if (pokemonItems.length > 0) {
+        selectedIndex = 0;
+        selectedPokemon = pokemonItems[0];
+        moveHoverSelector(selectedPokemon, true);
+        updatePokemonDetails(selectedPokemon);
+    }
+}
+
+searchInput.addEventListener('input', applyFilters);
+typeSelect.addEventListener('change', applyFilters);
 
 // Variables
 const pokemonList = document.querySelector(".pokemon-list ul");
